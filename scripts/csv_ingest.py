@@ -1,11 +1,13 @@
 import csv
+import requests
 
 
 def ingest_csv(filename):
     with open(filename) as csvfile:
         movies = csv.DictReader(csvfile)
-        for row in movies:
-            print(row['Release Year'])
+        response = requests.post('http://localhost:5000/api/unstable/movies', json={'movies': list(movies)})
+        if response.status_code >= 400:
+            print(response.status_code, response.text)
 
 
 def main():
