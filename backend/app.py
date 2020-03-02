@@ -8,7 +8,7 @@ import uuid
 app = Flask(__name__)
 
 
-POSTGRES_CONNECTION = "host=0.0.0.0 dbname=postgres user=postgres password=password"
+POSTGRES_CONNECTION = "host=kmdb-postgres dbname=postgres user=postgres password=password"
 COLUMNS = ['id', 'release_year', 'title', 'origin', 'director', 'cast_of_characters', 'genre', 'wiki_page', 'plot', 'revision']
 
 
