@@ -1,0 +1,9 @@
+.DS_Store
+.mypy_cache
+.python-version
+.*.sw*
+venv
+__pycache__
+ConvertedData.txt
+node_modules
+build
