@@ -17,6 +17,6 @@ docker network connect kmdb-net kmdb-api-server
 
 echo "run:"
 echo
-echo "$ <repo_root>/scripts/csv_ingest.py <filepath>"
+echo "$ python <repo_root>/scripts/csv_ingest.py <filepath>"
 echo
 echo "to initialize database"
