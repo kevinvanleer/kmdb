@@ -31,7 +31,7 @@ https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql
 $ <PROJECT_ROOT>/setup.sh
 ```
 
-Run the csv_ingest.sh script as instructed by setup.sh
+Run the csv_ingest.py script as instructed by setup.sh
 
 ```
 $ cd frontend
