@@ -17,7 +17,7 @@ import {
   getResult,
 } from './redux/state/requests/fetchMovies/base.js';
 
-import { set, get, isEmpty, debounce } from 'lodash';
+import { set, get, isEmpty } from 'lodash';
 
 import './App.css';
 

@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import Surface from '../layout/Surface.js';
+import React from 'react';
 
 import Flexbox from '../layout/Flexbox.js';
 import Scrollbars from '../layout/Scrollbars.js';
