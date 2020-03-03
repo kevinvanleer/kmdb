@@ -10,7 +10,7 @@ import * as serviceWorker from './serviceWorker';
 import { fetchMovies } from './redux/workflows/fetchMovies.js';
 
 const store = configureStore();
-store.dispatch(fetchMovies());
+store.dispatch(fetchMovies({}));
 
 ReactDOM.render(
   <AppProvider store={store} theme={currentTheme}>

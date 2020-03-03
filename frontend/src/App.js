@@ -11,20 +11,40 @@ import MovieDetails from './components/assemblies/MovieDetails.js';
 
 import { getMovies } from './redux/state/core/movies/base.js';
 import { fetchMovies } from './redux/workflows/fetchMovies.js';
-import { getPending } from './redux/state/requests/fetchMovies/base.js';
+import {
+  getPending,
+  getSuccess,
+  getResult,
+} from './redux/state/requests/fetchMovies/base.js';
 
-import { get, isEmpty } from 'lodash';
+import { set, get, isEmpty, debounce } from 'lodash';
 
 import './App.css';
 
 const App = () => {
   const dispatch = useDispatch();
   const movies = useSelector(state => getMovies(state));
-  const listPending = isEmpty(movies);
   const requestPending = useSelector(state => getPending(state));
+  const requestSuccess = useSelector(state => getSuccess(state));
+  const fetchedMovies = useSelector(state => getResult(state));
   const [selectedMovie, setSelectedMovie] = useState(0);
+  const [searchText, setSearchText] = useState('');
   const scrollContent = useRef(null);
   const scrollContainer = useRef(null);
+  const filteredMovies = useRef({});
+
+  if (searchText.length > 0 && requestSuccess && fetchedMovies) {
+    fetchedMovies.movies.forEach(movie =>
+      set(filteredMovies.current, movie.id, movie)
+    );
+  }
+
+  const movieList =
+    searchText.length > 0
+      ? Object.values(filteredMovies.current)
+      : Object.values(movies);
+
+  const listPending = isEmpty(movies);
 
   return (
     <Surface height="100vh" flexDirection="column">
@@ -44,13 +64,28 @@ const App = () => {
               flexGrow="1"
               ref={scrollContainer}
             >
+              <input
+                type="text"
+                onChange={evt => {
+                  setSearchText(evt.target.value);
+                  filteredMovies.current = {};
+                  dispatch(fetchMovies({ query: evt.target.value }));
+                }}
+                value={searchText}
+              />
               <Scrollbars
                 onScrollStop={() =>
                   scrollContent.current &&
                   scrollContainer.current &&
                   scrollContent.current.getBoundingClientRect().bottom - 500 <=
                     scrollContainer.current.getBoundingClientRect().bottom &&
-                  dispatch(fetchMovies(50, Object.keys(movies).length))
+                  dispatch(
+                    fetchMovies({
+                      pageSize: 50,
+                      offset: Object.keys(movies).length,
+                      query: searchText,
+                    })
+                  )
                 }
               >
                 <Flexbox
@@ -59,18 +94,19 @@ const App = () => {
                   maxWidth="50vw"
                   minWidth="20vw"
                 >
-                  {Object.values(movies).map(movie => (
-                    <Clickable
-                      id={movie.id}
-                      key={movie.id}
-                      onClick={() => {
-                        console.debug(movie.id);
-                        setSelectedMovie(movie.id);
-                      }}
-                    >
-                      <Text>{movie.title}</Text>
-                    </Clickable>
-                  ))}
+                  {movieList
+                    .sort((a, b) => a.title.localeCompare(b.title))
+                    .map(movie => (
+                      <Clickable
+                        id={movie.id}
+                        key={movie.id}
+                        onClick={() => setSelectedMovie(movie.id)}
+                      >
+                        <Text bold={selectedMovie === movie.id}>
+                          {movie.title}
+                        </Text>
+                      </Clickable>
+                    ))}
                   {requestPending && (
                     <Text disabled fontSize="detail">
                       LOADING...
@@ -80,7 +116,7 @@ const App = () => {
               </Scrollbars>
             </Flexbox>
             <Spacer width="1ch" />
-            <MovieDetails movie={get(movies, selectedMovie)} />
+            <MovieDetails movie={get(movies, selectedMovie, movieList[0])} />
           </Flexbox>
         )}
       </Flexbox>

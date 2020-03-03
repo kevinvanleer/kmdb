@@ -22,7 +22,6 @@ def table_exists(table_name, cursor):
 def row_to_json(row):
     record = {}
     for idx, item in enumerate(row):
-        print(record)
         record[COLUMNS[idx]] = item
     return record
 
@@ -95,22 +94,6 @@ def insert_movies(request):
     return 'OK'
 
 
-"""
-def delete_movies(request):
-    print('Im here')
-    id_list = request.json.get('ids', None)
-    print(id_list)
-    conn = psycopg2.connect(POSTGRES_CONNECTION)
-    cur = conn.cursor()
-    print('ready to execute')
-    cur.execute("DELETE FROM kmdb WHERE id IN %s", (id_list,))
-    rowcount = cur.rowcount
-    conn.commit()
-
-    return rowcount
-"""
-
-
 @app.route('/api/unstable/movies', methods=['GET', 'POST'])
 def handle_movies_request():
     if request.method == 'GET':
@@ -139,8 +122,6 @@ def modify_movie(movie_id, request):
     cur = conn.cursor()
     cur.execute("SELECT %s FROM kmdb WHERE id = %s", (AsIs(COLUMNS_STRING), movie_id))
     record = row_to_json(cur.fetchone())
-    print(patchData)
-    print(record)
 
     if int(patchData.get('revision')) != int(record.get('revision', 0)) + 1:
         return 'Revision mismatch', 400

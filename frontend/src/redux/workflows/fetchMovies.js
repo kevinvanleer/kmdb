@@ -6,15 +6,20 @@ import {
 
 import { setMoviesById } from '../state/core/movies/moviesByIdActions.js';
 
-export const fetchMovies = (pageSize = 50, offset = 0) => dispatch => {
+export const fetchMovies = ({ pageSize, offset, query }) => dispatch => {
+  pageSize = pageSize || 50;
+  offset = offset || 0;
+  query = query || '';
   dispatch(fetchMovies_initiateRequest());
-  return fetch(`/api/unstable/movies?pageSize=${pageSize}&offset=${offset}`, {
-    method: 'GET',
-  })
+  return fetch(
+    `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&query=${query}`,
+    {
+      method: 'GET',
+    }
+  )
     .then(res => res.json())
     .then(
       json => {
-        console.debug(json);
         dispatch(fetchMovies_setResultSuccess(json));
         dispatch(setMoviesById(json.movies));
       },

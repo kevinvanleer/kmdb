@@ -9,10 +9,10 @@ export const REQUESTS_FETCH_MOVIES__SET_RESULT_FAIL =
   'REQUESTS_FETCH_MOVIES__SET_RESULT_FAIL';
 
 export const getPending = state => get(state, 'requests.fetchMovies.pending');
-export const getComplete = state =>
-  get(state, 'requests.fetchMovies.complete');
+export const getComplete = state => get(state, 'requests.fetchMovies.complete');
 export const getSuccess = state => get(state, 'requests.fetchMovies.success');
 export const getError = state => get(state, 'requests.fetchMovies.error');
+export const getResult = state => get(state, 'requests.fetchMovies.result');
 
 export const initiateRequest = object => ({
   type: REQUESTS_FETCH_MOVIES__INITIATE_REQUEST,
