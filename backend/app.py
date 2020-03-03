@@ -3,6 +3,7 @@
 from flask import Flask
 from flask import request
 import psycopg2
+from psycopg2.extensions import AsIs
 import uuid
 
 app = Flask(__name__)
@@ -10,6 +11,7 @@ app = Flask(__name__)
 
 POSTGRES_CONNECTION = "host=kmdb-postgres dbname=postgres user=postgres password=password"
 COLUMNS = ['id', 'release_year', 'title', 'origin', 'director', 'cast_of_characters', 'genre', 'wiki_page', 'plot', 'revision']
+COLUMNS_STRING = ', '.join(COLUMNS)
 
 
 def table_exists(table_name, cursor):
@@ -20,6 +22,7 @@ def table_exists(table_name, cursor):
 def row_to_json(row):
     record = {}
     for idx, item in enumerate(row):
+        print(record)
         record[COLUMNS[idx]] = item
     return record
 
@@ -39,9 +42,15 @@ def hello_world():
 def list_movies(request):
     page_size = int(request.args.get('pageSize', 50))
     start_index = int(request.args.get('offset', 0))
+    search_query = request.args.get('query', '')
     conn = psycopg2.connect(POSTGRES_CONNECTION)
     cur = conn.cursor()
-    cur.execute("SELECT * FROM kmdb;")
+    if len(search_query) == 0:
+        cur.execute("SELECT %s FROM kmdb ORDER BY title ASC;", (AsIs(COLUMNS_STRING),))
+    else:
+        cur.execute("SELECT %s FROM (SELECT * FROM kmdb, plainto_tsquery(%s) AS q WHERE (tsv @@ q)) AS t1 ORDER BY ts_rank_cd(t1.tsv, plainto_tsquery(%s)) DESC LIMIT %s",
+                    (AsIs(COLUMNS_STRING), search_query, search_query, page_size + start_index))
+
     cur.scroll(start_index)
     rows = cur.fetchmany(page_size)
     return {'movies': rows_to_json(rows), 'offset': start_index}
@@ -61,7 +70,21 @@ def insert_movies(request):
     cur = conn.cursor()
 
     if not table_exists('kmdb', cur):
-        cur.execute("CREATE TABLE kmdb (id char (36) PRIMARY KEY, release_year smallint, title varchar, origin varchar, director varchar, cast_of_characters text, genre varchar, wiki_page varchar, plot text, revision integer);")
+        cur.execute("CREATE TABLE kmdb (id char (36) PRIMARY KEY, release_year char (4), title varchar, origin varchar, director varchar, cast_of_characters text, genre varchar, wiki_page varchar, plot text, revision integer, tsv tsvector);")
+        cur.execute("""CREATE FUNCTION documents_search_trigger() RETURNS trigger AS $$
+            begin
+                new.tsv :=
+                    setweight(to_tsvector(coalesce(new.title, '')), 'A') ||
+                    setweight(to_tsvector(coalesce(new.release_year, '')), 'B') ||
+                    setweight(to_tsvector(coalesce(new.genre, '')), 'B') ||
+                    setweight(to_tsvector(coalesce(new.director, '')), 'C') ||
+                    setweight(to_tsvector(coalesce(new.cast_of_characters, '')), 'C') ||
+                    setweight(to_tsvector(coalesce(new.origin, '')), 'C') ||
+                    setweight(to_tsvector(coalesce(new.plot, '')), 'D');
+                return new;
+            end
+            $$ LANGUAGE plpgsql""")
+        cur.execute("CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON kmdb FOR EACH ROW EXECUTE PROCEDURE documents_search_trigger()")
 
     for movie in movieData:
         movie['id'] = str(uuid.uuid4())
@@ -101,7 +124,7 @@ def handle_movies_request():
 def get_movie(movie_id):
     conn = psycopg2.connect(POSTGRES_CONNECTION)
     cur = conn.cursor()
-    cur.execute("SELECT * FROM kmdb WHERE id = %s", (movie_id,))
+    cur.execute("SELECT %s FROM kmdb WHERE id = %s", (AsIs(COLUMNS_STRING), movie_id))
     retVal = row_to_json(cur.fetchone())
     return retVal
 
@@ -114,7 +137,7 @@ def modify_movie(movie_id, request):
 
     conn = psycopg2.connect(POSTGRES_CONNECTION)
     cur = conn.cursor()
-    cur.execute("SELECT * FROM kmdb WHERE id = %s", (movie_id,))
+    cur.execute("SELECT %s FROM kmdb WHERE id = %s", (AsIs(COLUMNS_STRING), movie_id))
     record = row_to_json(cur.fetchone())
     print(patchData)
     print(record)
