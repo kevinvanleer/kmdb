@@ -23,6 +23,7 @@ https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql
 * No loading animation while fetching movies
 * Copied React components I created for another project to this one
 * Didn't handle uninitialized database in frontend
+* Did not get chance to add any database modification UI components.
 
 ## setup
 
@@ -46,7 +47,7 @@ API is intended to be RESTful and operate on movie resources.
 
 GET /api/unstable/movies
 
-Returns a JSON object 'movies' that contains a list of movie objects.
+Returns a JSON object `movies` that contains a list of movie objects.
 
 GET /api/unstable/movies/<id>
 
@@ -56,7 +57,7 @@ Return a single 'movie' object.
 
 POST /api/unstable/movies
 
-Payload should be JSON string that describes an object, 'movies' that contains a list of movie objects.
+Payload should be JSON string that describes an object, `movies` that contains a list of movie objects.
 
 ### Modify movies
 
@@ -81,9 +82,19 @@ For movie:
 },
 ```
 
+Sending the following patch:
+
 ```
 {"patch": {
 	"revision": "1",
 	"director": "Kevin Van Leer"
 }}
 ```
+
+will change the `director` field to "Kevin Van Leer" and increment the `revision` field.
+
+### Delete movie
+
+DELETE /api/unstable/movies/<id>
+
+Deletes the specified movie resource.
