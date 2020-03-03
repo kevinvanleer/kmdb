@@ -3,7 +3,7 @@ import { get } from 'lodash';
 
 export const CORE_MOVIES__SET_MOVIES = 'CORE_MOVIES__SET_MOVIES';
 
-export const getMovies = state => get(state, 'core.movies.expressions');
+export const getMovies = state => get(state, 'core.movies');
 
 export const setMovies = value => ({
   type: CORE_MOVIES__SET_MOVIES,
@@ -13,7 +13,7 @@ export const setMovies = value => ({
 const movies = (state = initialState, action) => {
   switch (action.type) {
     case CORE_MOVIES__SET_MOVIES:
-      return Object.assign({}, state, { expressions: action.value });
+      return Object.assign({}, state, action.value);
     default:
       return state;
   }

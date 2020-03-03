@@ -4,14 +4,18 @@ import { Provider } from 'react-redux';
 import configureStore from './redux/configureStore';
 import './index.css';
 import App from './App';
+import AppProvider from './AppProvider';
 import * as serviceWorker from './serviceWorker';
 
+import { fetchMovies } from './redux/workflows/fetchMovies.js';
+
 const store = configureStore();
+store.dispatch(fetchMovies());
 
 ReactDOM.render(
-  <Provider store={store}>
+  <AppProvider store={store} theme={currentTheme}>
     <App />
-  </Provider>,
+  </AppProvider>,
   document.getElementById('root')
 );
 

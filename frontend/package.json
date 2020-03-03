@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "addon-redux": "^1.1.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-redux": "^7.1.1",
@@ -22,7 +23,11 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -41,6 +46,9 @@
     }
   },
   "lint-staged": {
-    "*.{js,json}": ["eslint --fix", "git add"]
+    "*.{js,json}": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

@@ -1,3 +1,1 @@
-export const initialState = {
-  expressions: [],
-};
+export const initialState = {};

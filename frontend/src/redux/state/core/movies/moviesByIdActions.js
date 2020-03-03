@@ -1,22 +1,21 @@
-import { v4 as uuid } from 'uuid';
-
 import { getMovies, setMovies } from './base';
 
-//import { updateSet } from '../../../../utilities/setOperations.js';
-//import * as exports from './expressionActions.js';
+export const setMoviesById = newMovies => (dispatch, getState) => {
+  const movies = getMovies(getState());
+  let newMoviesById = {};
+  newMovies.forEach(movie => (newMoviesById[movie.id] = movie));
 
-export const addMovie = expression => (dispatch, getState) => {
-  const expressions = getMovies(getState());
-  expression.id = uuid();
-  expressions.push(expression);
-  dispatch(setMovies(expressions));
+  dispatch(setMovies(Object.assign({}, movies, newMoviesById)));
 };
 
 export const removeMovie = id => (dispatch, getState) => {
-  const expressions = getMovies(getState());
-  const index = expressions.findIndex(expression => expression.id === id);
-  if (index >= 0) {
-    expressions.splice(index, 1);
-    dispatch(setMovies(expressions));
-  }
+  const movies = getMovies(getState());
+  delete movies[id];
+  dispatch(setMovies(movies));
+};
+
+export const initializeMovies = movies => (dispatch, getState) => {
+  let moviesById = {};
+  movies.forEach(movie => (moviesById[movie.id] = movie));
+  dispatch(setMovies(moviesById));
 };
