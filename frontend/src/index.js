@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import configureStore from './redux/configureStore';
 import './index.css';
 import App from './App';
-import AppProvider from './AppProvider';
+import AppProvider from './AppProvider.js';
+import currentTheme from './themes.js';
 import * as serviceWorker from './serviceWorker';
 
 import { fetchMovies } from './redux/workflows/fetchMovies.js';

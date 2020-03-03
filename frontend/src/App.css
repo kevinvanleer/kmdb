@@ -1,22 +1,23 @@
-.App {
-  text-align: center;
+button {
+  all: unset;
 }
 
-.App-logo {
-  height: 40vmin;
+a:link {
+  color: #0ee;
+}
+a:visited {
+  color: #0aa;
+}
+a:active {
+  color: #088;
+}
+a:hover {
+  color: #0ff;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+div#root,
+html,
+body {
+  width: 100%;
+  height: 100%;
 }

@@ -1,22 +1,3 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-
-export const muiTheme = createMuiTheme({
-  zIndex: {
-    modal: 5500,
-    snackbar: 5600,
-    tooltip: 5700,
-  },
-  palette: {
-    type: 'dark',
-    primary: {
-      light: '#7cc',
-      main: '#0ff',
-      dark: '#0cc',
-      contrastText: '#101010',
-    },
-  },
-});
-
 const dark = {
   colors: {
     surface: {
