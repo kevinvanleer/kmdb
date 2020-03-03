@@ -24,6 +24,7 @@ https://blog.lateral.io/2015/05/full-text-search-in-milliseconds-with-postgresql
 * Copied React components I created for another project to this one
 * Didn't handle uninitialized database in frontend
 * Did not get chance to add any database modification UI components.
+* No production React server.
 
 ## setup
 
