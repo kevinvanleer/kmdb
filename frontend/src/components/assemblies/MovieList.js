@@ -98,7 +98,7 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
 
 MovieList.propTypes = {
   movies: PropTypes.object,
-  selectedMovie: PropTypes.object,
+  selectedMovie: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   setSelectedMovie: PropTypes.func,
 };
 
