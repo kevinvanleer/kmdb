@@ -15,7 +15,7 @@ import { get, isEmpty } from 'lodash';
 import './App.css';
 
 const App = () => {
-  const movies = useSelector(state => getMovies(state));
+  const movies = useSelector((state) => getMovies(state));
   const [selectedMovie, setSelectedMovie] = useState(0);
 
   const listPending = isEmpty(movies);
@@ -23,7 +23,7 @@ const App = () => {
   return (
     <Surface height="100vh" flexDirection="column">
       <Flexbox flexDirection="column" padding="1em" flexGrow="1">
-        <Text fontSize="heading">kMDb</Text>
+        <Text fontSize="heading">KmdB</Text>
         <Spacer height="1em" />
         {listPending ? (
           <Text fontSize="heading" disabled>

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import Flexbox from '../layout/Flexbox.js';
 import Scrollbars from '../layout/Scrollbars.js';
@@ -15,17 +16,18 @@ import {
 import { set } from 'lodash';
 const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
   const dispatch = useDispatch();
-  const requestPending = useSelector(state => getPending(state));
-  const requestSuccess = useSelector(state => getSuccess(state));
-  const fetchedMovies = useSelector(state => getResult(state));
+  const requestPending = useSelector((state) => getPending(state));
+  const requestSuccess = useSelector((state) => getSuccess(state));
+  const fetchedMovies = useSelector((state) => getResult(state));
   const [searchText, setSearchText] = useState('');
   const scrollContent = useRef(null);
   const scrollContainer = useRef(null);
   const filteredMovies = useRef({});
 
   if (searchText.length > 0 && requestSuccess && fetchedMovies) {
-    fetchedMovies.movies.forEach(movie =>
-      set(filteredMovies.current, movie.id, movie)
+    console.debug(filteredMovies, fetchedMovies);
+    fetchedMovies.movies.forEach((movie) =>
+      set(filteredMovies.current, movie._id, movie)
     );
   }
 
@@ -44,10 +46,10 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
     >
       <input
         type="text"
-        onChange={evt => {
+        onChange={(evt) => {
           setSearchText(evt.target.value);
           filteredMovies.current = {};
-          dispatch(fetchMovies({ query: evt.target.value }));
+          dispatch(fetchMovies({ search: evt.target.value }));
         }}
         value={searchText}
       />
@@ -60,8 +62,8 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
           dispatch(
             fetchMovies({
               pageSize: 50,
-              offset: Object.keys(movies).length,
-              query: searchText,
+              offset: Object.keys(movieList).length,
+              search: searchText,
             })
           )
         }
@@ -74,13 +76,13 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
         >
           {movieList
             .sort((a, b) => a.title.localeCompare(b.title))
-            .map(movie => (
+            .map((movie) => (
               <Clickable
-                id={movie.id}
-                key={movie.id}
-                onClick={() => setSelectedMovie(movie.id)}
+                id={movie._id}
+                key={movie._id}
+                onClick={() => setSelectedMovie(movie._id)}
               >
-                <Text bold={selectedMovie === movie.id}>{movie.title}</Text>
+                <Text bold={selectedMovie === movie._id}>{movie.title}</Text>
               </Clickable>
             ))}
           {requestPending && (
@@ -92,6 +94,12 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
       </Scrollbars>
     </Flexbox>
   );
+};
+
+MovieList.propTypes = {
+  movies: PropTypes.object,
+  selectedMovie: PropTypes.object,
+  setSelectedMovie: PropTypes.func,
 };
 
 export default MovieList;

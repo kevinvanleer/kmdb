@@ -14,8 +14,6 @@ describe('core/movies reducers', () => {
         type: CORE_MOVIES__SET_MOVIES,
         value: fakeMovies,
       }).core.movies
-    ).toEqual(
-      Object.assign({}, initialState, { expressions: fakeMovies })
-    );
+    ).toEqual(Object.assign({}, initialState, fakeMovies));
   });
 });

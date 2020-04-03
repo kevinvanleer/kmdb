@@ -6,23 +6,27 @@ import {
 
 import { setMoviesById } from '../state/core/movies/moviesByIdActions.js';
 
-export const fetchMovies = ({ pageSize, offset, query }) => dispatch => {
+export const fetchMovies = ({ pageSize, offset, search }) => (dispatch) => {
   pageSize = pageSize || 50;
   offset = offset || 0;
-  query = query || '';
-  dispatch(fetchMovies_initiateRequest());
+  search = search || '';
+  dispatch(
+    fetchMovies_initiateRequest({
+      uri: `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&search=${search}`,
+    })
+  );
   return fetch(
-    `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&query=${query}`,
+    `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&search=${search}`,
     {
       method: 'GET',
     }
   )
-    .then(res => res.json())
+    .then((res) => res.json())
     .then(
-      json => {
+      (json) => {
         dispatch(fetchMovies_setResultSuccess(json));
         dispatch(setMoviesById(json.movies));
       },
-      err => dispatch(fetchMovies_setResultFail(err))
+      (err) => dispatch(fetchMovies_setResultFail(err))
     );
 };

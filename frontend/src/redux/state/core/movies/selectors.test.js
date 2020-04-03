@@ -5,7 +5,7 @@ describe('core/dataset selectors', () => {
     let fakeValue = ['a', 'b', 'c'];
     let state = {
       core: {
-        movies: { expressions: fakeValue },
+        movies: fakeValue,
       },
     };
     expect(getMovies(state)).toEqual(fakeValue);
