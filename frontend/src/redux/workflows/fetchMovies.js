@@ -9,18 +9,18 @@ import { setMoviesById } from '../state/core/movies/moviesByIdActions.js';
 export const fetchMovies = ({ pageSize, offset, search }) => (dispatch) => {
   pageSize = pageSize || 50;
   offset = offset || 0;
-  search = search || '';
+  let uri = `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}`;
+  if (search) {
+    uri += `&search=${search}`;
+  }
   dispatch(
     fetchMovies_initiateRequest({
-      uri: `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&search=${search}`,
+      uri: uri,
     })
   );
-  return fetch(
-    `/api/unstable/movies?pageSize=${pageSize}&offset=${offset}&search=${search}`,
-    {
-      method: 'GET',
-    }
-  )
+  return fetch(uri, {
+    method: 'GET',
+  })
     .then((res) => res.json())
     .then(
       (json) => {
