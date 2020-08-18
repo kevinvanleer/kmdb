@@ -39,7 +39,7 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
   return (
     <Flexbox
       flexDirection="column"
-      maxWidth="50vw"
+      maxWidth="50ch"
       minWidth="20vw"
       flexGrow="1"
       ref={scrollContainer}
@@ -68,12 +68,7 @@ const MovieList = ({ movies, selectedMovie, setSelectedMovie }) => {
           )
         }
       >
-        <Flexbox
-          ref={scrollContent}
-          flexDirection="column"
-          maxWidth="50vw"
-          minWidth="20vw"
-        >
+        <Flexbox ref={scrollContent} flexDirection="column">
           {movieList
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((movie) => (
